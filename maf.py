@@ -20,40 +20,41 @@ import argparse
 import pprint
 import copy
 
-from data import fetch_dataloaders
+# from data import fetch_dataloaders
 
 
-parser = argparse.ArgumentParser()
-# action
-parser.add_argument('--train', action='store_true', help='Train a flow.')
-parser.add_argument('--evaluate', action='store_true', help='Evaluate a flow.')
-parser.add_argument('--restore_file', type=str, help='Path to model to restore.')
-parser.add_argument('--generate', action='store_true', help='Generate samples from a model.')
-parser.add_argument('--data_dir', default='./data/', help='Location of datasets.')
-parser.add_argument('--output_dir', default='./results/{}'.format(os.path.splitext(__file__)[0]))
-parser.add_argument('--results_file', default='results.txt', help='Filename where to store settings and test results.')
-parser.add_argument('--no_cuda', action='store_true', help='Do not use cuda.')
-# data
-parser.add_argument('--dataset', default='toy', help='Which dataset to use.')
-parser.add_argument('--flip_toy_var_order', action='store_true', help='Whether to flip the toy dataset variable order to (x2, x1).')
-parser.add_argument('--seed', type=int, default=1, help='Random seed to use.')
-# model
-parser.add_argument('--model', default='maf', help='Which model to use: made, maf.')
-# made parameters
-parser.add_argument('--n_blocks', type=int, default=5, help='Number of blocks to stack in a model (MADE in MAF; Coupling+BN in RealNVP).')
-parser.add_argument('--n_components', type=int, default=1, help='Number of Gaussian clusters for mixture of gaussians models.')
-parser.add_argument('--hidden_size', type=int, default=100, help='Hidden layer size for MADE (and each MADE block in an MAF).')
-parser.add_argument('--n_hidden', type=int, default=1, help='Number of hidden layers in each MADE.')
-parser.add_argument('--activation_fn', type=str, default='relu', help='What activation function to use in the MADEs.')
-parser.add_argument('--input_order', type=str, default='sequential', help='What input order to use (sequential | random).')
-parser.add_argument('--conditional', default=False, action='store_true', help='Whether to use a conditional model.')
-parser.add_argument('--no_batch_norm', action='store_true')
-# training params
-parser.add_argument('--batch_size', type=int, default=100)
-parser.add_argument('--n_epochs', type=int, default=50)
-parser.add_argument('--start_epoch', default=0, help='Starting epoch (for logging; to be overwritten when restoring file.')
-parser.add_argument('--lr', type=float, default=1e-4, help='Learning rate.')
-parser.add_argument('--log_interval', type=int, default=1000, help='How often to show loss statistics and save samples.')
+def parse_args():
+    parser = argparse.ArgumentParser()
+    # action
+    parser.add_argument('--train', action='store_true', help='Train a flow.')
+    parser.add_argument('--evaluate', action='store_true', help='Evaluate a flow.')
+    parser.add_argument('--restore_file', type=str, help='Path to model to restore.')
+    parser.add_argument('--generate', action='store_true', help='Generate samples from a model.')
+    parser.add_argument('--data_dir', default='./data/', help='Location of datasets.')
+    parser.add_argument('--output_dir', default='./results/{}'.format(os.path.splitext(__file__)[0]))
+    parser.add_argument('--results_file', default='results.txt', help='Filename where to store settings and test results.')
+    parser.add_argument('--no_cuda', action='store_true', help='Do not use cuda.')
+    # data
+    parser.add_argument('--dataset', default='toy', help='Which dataset to use.')
+    parser.add_argument('--flip_toy_var_order', action='store_true', help='Whether to flip the toy dataset variable order to (x2, x1).')
+    parser.add_argument('--seed', type=int, default=1, help='Random seed to use.')
+    # model
+    parser.add_argument('--model', default='maf', help='Which model to use: made, maf.')
+    # made parameters
+    parser.add_argument('--n_blocks', type=int, default=5, help='Number of blocks to stack in a model (MADE in MAF; Coupling+BN in RealNVP).')
+    parser.add_argument('--n_components', type=int, default=1, help='Number of Gaussian clusters for mixture of gaussians models.')
+    parser.add_argument('--hidden_size', type=int, default=100, help='Hidden layer size for MADE (and each MADE block in an MAF).')
+    parser.add_argument('--n_hidden', type=int, default=1, help='Number of hidden layers in each MADE.')
+    parser.add_argument('--activation_fn', type=str, default='relu', help='What activation function to use in the MADEs.')
+    parser.add_argument('--input_order', type=str, default='sequential', help='What input order to use (sequential | random).')
+    parser.add_argument('--conditional', default=False, action='store_true', help='Whether to use a conditional model.')
+    parser.add_argument('--no_batch_norm', action='store_true')
+    # training params
+    parser.add_argument('--batch_size', type=int, default=100)
+    parser.add_argument('--n_epochs', type=int, default=50)
+    parser.add_argument('--start_epoch', default=0, help='Starting epoch (for logging; to be overwritten when restoring file.')
+    parser.add_argument('--lr', type=float, default=1e-4, help='Learning rate.')
+    parser.add_argument('--log_interval', type=int, default=1000, help='How often to show loss statistics and save samples.')
 
 
 # --------------------
